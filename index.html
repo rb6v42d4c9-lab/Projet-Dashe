@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08080b">
+<title>ROOT SHADOW</title>
+
+<style>
+:root {
+  --bg:#08080b;
+  --panel:#101015;
+  --card:#15151d;
+  --border:#292934;
+  --accent:#a78bfa;
+  --text:#ededf4;
+  --muted:#858593;
+  --green:#9be6b0;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:20px 14px 40px;
+  background:var(--bg);
+  color:var(--text);
+  font:14px monospace;
+}
+main { max-width:1000px; margin:auto; }
+header {
+  padding:18px 0 22px;
+  border-bottom:1px solid var(--border);
+}
+h1 {
+  margin:0 0 10px;
+  color:var(--accent);
+  font-size:clamp(26px,5vw,36px);
+  letter-spacing:3px;
+}
+h2 {
+  margin:0 0 16px;
+  color:var(--accent);
+  font-size:14px;
+  letter-spacing:1px;
+}
+.subtitle,.muted {
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.8;
+}
+.status { color:var(--green); font-size:11px; margin-top:12px; }
+.panel {
+  margin-top:18px;
+  padding:18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:9px;
+}
+.platforms {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.platform {
+  padding:14px 8px;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:7px;
+  cursor:pointer;
+  font:12px monospace;
+}
+.platform.active {
+  border-color:var(--accent);
+  color:var(--accent);
+  background:#1b1728;
+}
+.search-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+label {
+  display:block;
+  margin-bottom:8px;
+  color:var(--muted);
+  font-size:11px;
+}
+input {
+  width:100%;
+  min-width:0;
+  padding:13px 10px;
+  background:#08080c;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:6px;
+  font:inherit;
+  outline:none;
+}
+input:focus { border-color:var(--accent); }
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:14px;
+}
+button.action {
+  padding:12px 15px;
+  background:var(--accent);
+  color:#100c1a;
+  border:1px solid var(--accent);
+  border-radius:6px;
+  cursor:pointer;
+  font:bold 12px monospace;
+}
+button.secondary { background:transparent; color:var(--accent); }
+button:hover { filter:brightness(1.12); }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.card {
+  padding:13px;
+  min-width:0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:7px;
+}
+.key { color:var(--muted); font-size:10px; margin-bottom:8px; }
+.value { overflow-wrap:anywhere; line-height:1.6; }
+.demo { color:var(--accent); }
+.tag {
+  display:inline-block;
+  padding:5px 7px;
+  margin-bottom:12px;
+  border:1px solid #46405c;
+  color:var(--accent);
+  font-size:10px;
+}
+.hidden { display:none; }
+a.result-link {
+  display:block;
+  padding:13px 0;
+  color:var(--accent);
+  border-bottom:1px solid var(--border);
+  text-decoration:none;
+  overflow-wrap:anywhere;
+}
+a.result-link:hover { text-decoration:underline; }
+pre {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:var(--green);
+  font-size:12px;
+  line-height:1.8;
+}
+#notice { margin-top:14px; color:var(--green); font-size:12px; }
+footer { text-align:center; color:var(--muted); font-size:10px; margin-top:24px; }
+@media(max-width:600px) {
+  .platforms { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .search-grid,.grid { grid-template-columns:1fr; }
+  .panel { padding:14px; }
+}
+</style>
+</head>
+
+<body>
+<main>
+<header>
+  <h1>ROOT SHADOW</h1>
+  <div class="subtitle">MULTI-PLATFORM SEARCH // OSINT</div>
+  <div class="status">● SYSTEM READY</div>
+</header>
+
+<section class="panel">
+  <h2>01 / SELECT PLATFORM</h2>
+  <div class="platforms" id="platforms">
+    <button class="platform active" data-platform="Snapchat">👻 Snapchat</button>
+    <button class="platform" data-platform="Instagram">◎ Instagram</button>
+    <button class="platform" data-platform="TikTok">♪ TikTok</button>
+    <button class="platform" data-platform="PSN">🎮 PlayStation Network</button>
+    <button class="platform" data-platform="Facebook">f Facebook</button>
+    <button class="platform" data-platform="Web">⌕ Web Search</button>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>02 / SEARCH TERMINAL</h2>
+  <div class="search-grid">
+    <div>
+      <label for="username">USERNAME / GAMERTAG</label>
+      <input id="username" placeholder="example.67"
+             value="example.67" autocomplete="off">
+    </div>
+    <div>
+      <label for="city">VILLE</label>
+      <input id="city" placeholder="Ville" autocomplete="off">
+    </div>
+    <div>
+      <label for="postcode">CODE POSTAL</label>
+      <input id="postcode" placeholder="Code postal"
+             inputmode="numeric" maxlength="5" autocomplete="off">
+    </div>
+  </div>
+  <div class="actions">
+    <button class="action" id="searchBtn">SEARCH</button>
+    <button class="action secondary" id="clearBtn">CLEAR</button>
+  </div>
+  <div id="notice" role="status">En attente d'une recherche.</div>
+</section>
+
+<section id="resultsPanel" class="panel hidden">
+  <h2>03 / SEARCH RESULTS</h2>
+  <div class="tag" id="resultTag">PROFILE RESULTS</div>
+  <div id="results" class="grid"></div>
+</section>
+
+<section class="panel">
+  <h2>04 / OSINT MODULE</h2>
+  <div class="actions">
+    <button class="action" id="osintBtn">START OSINT SEARCH</button>
+    <button class="action secondary" id="clearOsintBtn">CLEAR LINKS</button>
+  </div>
+  <div id="osintLinks"></div>
+</section>
+
+<section class="panel">
+  <h2>05 / TERMINAL LOG</h2>
+  <pre id="log">[READY] ROOT SHADOW
+[READY] Waiting for input...</pre>
+</section>
+
+<footer>ROOT SHADOW // MULTI-PLATFORM SEARCH</footer>
+</main>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+let selectedPlatform = "Snapchat";
+
+const cities = {
+  "lunel": {
+    name:"Lunel",
+    postal:"34400",
+    department:"Hérault",
+    departmentCode:"34",
+    region:"Occitanie",
+    country:"France",
+    insee:"34145"
+  }
+};
+
+function normalize(value) {
+  return value.trim().toLocaleLowerCase("fr-FR")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function log(message) {
+  $("log").textContent += "\n" + message;
+}
+
+function addResult(label,value,isDemo=false) {
+  const card=document.createElement("div");
+  card.className="card";
+
+  const key=document.createElement("div");
+  key.className="key";
+  key.textContent=label;
+
+  const val=document.createElement("div");
+  val.className="value";
+  val.textContent=value;
+
+  if(isDemo) {
+    val.classList.add("demo");
+    val.title="Valeur fictive";
+  }
+
+  card.append(key,val);
+  $("results").appendChild(card);
+}
+
+function demoValue(length) {
+  const chars="0123456789abcdef";
+  const bytes=new Uint8Array(length);
+
+  if(window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for(let i=0;i<length;i++) {
+      bytes[i]=Math.floor(Math.random()*256);
+    }
+  }
+
+  return Array.from(bytes,b=>chars[b%16]).join("");
+}
+
+function runSearch() {
+  const username=$("username").value.trim().replace(/^@/,"");
+  const cityInput=$("city").value.trim();
+  const postalInput=$("postcode").value.trim();
+
+  $("results").replaceChildren();
+  $("resultsPanel").classList.add("hidden");
+
+  if(!username) {
+    $("notice").textContent="ERREUR : entre un pseudo.";
+    return;
+  }
+
+  if(postalInput && !/^\d{5}$/.test(postalInput)) {
+    $("notice").textContent="ERREUR : code postal invalide.";
+    return;
+  }
+
+  $("resultTag").textContent=selectedPlatform.toUpperCase()+" / RESULTS";
+
+  addResult("PLATFORM",selectedPlatform);
+  addResult("USERNAME",username);
+
+  // Valeurs générées localement, sans accès aux données privées.
+  addResult("ID",demoValue(6).toUpperCase(),true);
+  addResult("HASH",demoValue(32),true);
+  addResult("SESSION",demoValue(20),true);
+
+  if(cityInput) {
+    const city=cities[normalize(cityInput)];
+    addResult("VILLE SAISIE",cityInput);
+
+    if(city) {
+      addResult("COUNTRY",city.country);
+      addResult("POSTAL CODE",city.postal);
+      addResult("DEPARTMENT",city.department+" ("+city.departmentCode+")");
+      addResult("REGION",city.region);
+      addResult("INSEE CODE",city.insee);
+
+      if(postalInput) {
+        addResult("POSTAL CHECK",
+          postalInput===city.postal ? "MATCH" : "NO MATCH");
+      }
+    } else {
+      addResult("GEOGRAPHY","À vérifier");
+      if(postalInput) addResult("CODE POSTAL SAISI",postalInput);
+    }
+  } else if(postalInput) {
+    addResult("CODE POSTAL SAISI",postalInput);
+  }
+
+  $("resultsPanel").classList.remove("hidden");
+  $("notice").textContent="SEARCH READY // "+selectedPlatform;
+  log("[SEARCH] "+selectedPlatform+" / "+username);
+  log("[DONE] Results displayed.");
+}
+
+function platformUrl(platform,username) {
+  const q=encodeURIComponent('"'+username+'"');
+
+  switch(platform) {
+    case "Snapchat":
+      return "https://www.google.com/search?q="+
+        encodeURIComponent('site:snapchat.com/add/ "'+username+'"');
+    case "Instagram":
+      return "https://www.google.com/search?q="+
+        encodeURIComponent('site:instagram.com "'+username+'"');
+    case "TikTok":
+      return "https://www.google.com/search?q="+
+        encodeURIComponent('site:tiktok.com "'+username+'"');
+    case "PSN":
+      return "https://www.google.com/search?q="+
+        encodeURIComponent('"'+username+'" PlayStation Network');
+    case "Facebook":
+      return "https://www.google.com/search?q="+
+        encodeURIComponent('site:facebook.com "'+username+'"');
+    default:
+      return "https://www.google.com/search?q="+q;
+  }
+}
+
+function runOsint() {
+  const username=$("username").value.trim().replace(/^@/,"");
+  const city=$("city").value.trim();
+  const postal=$("postcode").value.trim();
+
+  if(!username) {
+    $("notice").textContent="ERREUR : entre un pseudo.";
+    return;
+  }
+
+  const links=[
+    ["Plateforme sélectionnée",platformUrl(selectedPlatform,username)],
+    ["Mentions publiques","https://www.google.com/search?q="+
+      encodeURIComponent('"'+username+'"')],
+    ["Profils publics","https://www.google.com/search?q="+
+      encodeURIComponent('"'+username+'" profil public')]
+  ];
+
+  if(city) {
+    links.push(["Pseudo + ville","https://www.google.com/search?q="+
+      encodeURIComponent('"'+username+'" "'+city+'"')]);
+  }
+
+  if(city && postal) {
+    links.push(["Pseudo + ville + code postal",
+      "https://www.google.com/search?q="+
+      encodeURIComponent('"'+username+'" "'+city+'" "'+postal+'"')]);
+  }
+
+  const container=$("osintLinks");
+  container.replaceChildren();
+
+  links.forEach(([label,url])=>{
+    const a=document.createElement("a");
+    a.className="result-link";
+    a.href=url;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+    a.textContent="[SEARCH] "+label;
+    container.appendChild(a);
+  });
+
+  log("[OSINT] "+links.length+" search links prepared.");
+  $("notice").textContent="OSINT SEARCH READY.";
+}
+
+document.querySelectorAll(".platform").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll(".platform").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    selectedPlatform=button.dataset.platform;
+    $("notice").textContent="PLATFORM SELECTED // "+selectedPlatform;
+    log("[PLATFORM] "+selectedPlatform);
+  });
+});
+
+$("searchBtn").addEventListener("click",runSearch);
+$("osintBtn").addEventListener("click",runOsint);
+
+$("clearBtn").addEventListener("click",()=>{
+  $("username").value="";
+  $("city").value="";
+  $("postcode").value="";
+  $("results").replaceChildren();
+  $("resultsPanel").classList.add("hidden");
+  $("notice").textContent="FIELDS CLEARED.";
+  $("log").textContent="[READY] ROOT SHADOW";
+});
+
+$("clearOsintBtn").addEventListener("click",()=>{
+  $("osintLinks").replaceChildren();
+  log("[OSINT] LINKS CLEARED.");
+});
+</script>
+</body>
+</html>
